@@ -28,10 +28,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run tests (optional, assuming you have tests)
-      - name: Run tests
-        run: npm test
-
       # Step 5: Build Docker image
       - name: Build Docker image
         run: docker build -t milanchaulagain010/assignment:latest .

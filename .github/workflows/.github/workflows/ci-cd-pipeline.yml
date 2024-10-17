@@ -34,7 +34,7 @@ jobs:
 
       # Step 5: Build Docker image
       - name: Build Docker image
-        run: docker build -t your-dockerhub-username/your-image-name:latest .
+        run: docker build -t milanchaulagain010/assignment:latest .
 
       # Step 6: Log in to DockerHub (using credentials from GitHub Secrets)
       - name: Log in to DockerHub
@@ -46,8 +46,8 @@ jobs:
       # Step 7: Tag and Push Docker image to DockerHub
       - name: Tag and Push Docker image
         run: |
-          docker tag your-dockerhub-username/your-image-name:latest docker.io/your-dockerhub-username/your-image-name:latest
-          docker push docker.io/your-dockerhub-username/your-image-name:latest
+          docker tag milanchaulagain010/assignment:latest docker.io/milanchaulagain010/assignment:latest
+          docker push docker.io/milanchaulagain010/assignment:latest
 
   deploy:
     needs: build
@@ -66,9 +66,9 @@ jobs:
       # Step 3: Initialize Terraform
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform/
+        working-directory: teraform/
 
       # Step 4: Apply Terraform to provision infrastructure (e.g., EC2)
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: terraform/
+        working-directory: teraform/

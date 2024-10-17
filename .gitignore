@@ -1,0 +1,16 @@
+# Ignore everything inside the terraform folder
+teraform/*
+
+# Allow Terraform configuration files
+!teraform/*.tf
+!teraform/*.tfvars
+
+# Ignore Terraform state files
+teraform/*.tfstate
+teraform/*.tfstate.backup
+
+# Ignore .terraform directory which contains provider binaries
+teraform/.terraform/
+
+# Allow the Terraform lock file if needed (optional)
+!teraform/.terraform.lock.hcl

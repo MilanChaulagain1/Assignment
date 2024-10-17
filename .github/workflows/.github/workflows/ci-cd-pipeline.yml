@@ -1,0 +1,57 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment (if it's a Node.js app)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      # Step 3: Install dependencies and run tests
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t your-docker-image-name .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Install Terraform
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      # Step 3: Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+        working-directory: teraform/
+
+      # Step 4: Apply Terraform to provision infrastructure
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: teraform/

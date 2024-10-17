@@ -1,5 +1,6 @@
 name: CI/CD Pipeline
 
+# Trigger the workflow on push or pull request to the 'main' branch
 on:
   push:
     branches:
@@ -13,24 +14,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
+      # Step 1: Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js environment (if it's a Node.js app)
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: '14'
 
-      # Step 3: Install dependencies and run tests
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Build Docker image
+      # Step 4: Run tests (optional, assuming you have tests)
+      - name: Run tests
+        run: npm test
+
+      # Step 5: Build Docker image
       - name: Build Docker image
+        run: docker build -t your-dockerhub-username/your-image-name:latest .
+
+      # Step 6: Log in to DockerHub (using credentials from GitHub Secrets)
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Step 7: Tag and Push Docker image to DockerHub
+      - name: Tag and Push Docker image
         run: |
-          docker build -t your-docker-image-name .
+          docker tag your-dockerhub-username/your-image-name:latest docker.io/your-dockerhub-username/your-image-name:latest
+          docker push docker.io/your-dockerhub-username/your-image-name:latest
 
   deploy:
     needs: build
@@ -38,7 +55,7 @@ jobs:
     environment: production
 
     steps:
-      # Step 1: Checkout the code
+      # Step 1: Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -49,9 +66,9 @@ jobs:
       # Step 3: Initialize Terraform
       - name: Terraform Init
         run: terraform init
-        working-directory: teraform/
+        working-directory: terraform/
 
-      # Step 4: Apply Terraform to provision infrastructure
+      # Step 4: Apply Terraform to provision infrastructure (e.g., EC2)
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: teraform/
+        working-directory: terraform/
